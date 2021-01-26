@@ -120,8 +120,63 @@ see chap 9 and 10 of https://happygitwithr.com/
 ## villageTable <- read_csv("/data/villageTable.csv")
 ## where is this data? 
 
+```
+
+## Calss 4 
+Date: Jan 26, 2021
+
+- different functions and diff forms that you want to put your data in
+- talking about malaria data set
+- Data maintenance; tidy data the core of it, into database form that is relational (tibble, dataframe, they know how to connect to each others through ids), long format
+- long format; tidy data, make data as clean as possible, break the dataset into different related tables so I can put the data into level I want (individual table, household table, village table, etc), we use keys
+- choose your work flow
+  - example; tibble (time, S,I,R) from wide format to long format using pivot_longer
+  pivot_longer(data, cols=!time , names_to="class", values_to="people") 
+    - cols=!time; don't treat time as value variable (! is called Bang)
+    - we are treat S I R as same kind and time different
+    - result -> columns would be "time,class,people"
+  - Importing data;
+  - summarize; check the numbers are nums, dates are dates, categorical vars are factors
+
+- How to make relational tables?
+  - a table at level of people
+  - a table at the level of sampling events,
+  - a table 
+
+
+
+```{r intro to R class 4}
+## 
+
+print(villageTable
+      %>% group_by(vname) ## village name
+      %>% summerize(count= n())
+      %>% filter(count>1)
+      )
+
+print(parasiteTable
+      %>%  group_by(id, village, compund)
+      %>% summerize(count=n())
+      %>% group_by(id)
+      %>% summerize(count=n())
+      %>% filter(count>1)
+      %>% arrange(desc(count))
+  
+)
+
+```
+
+- correction tables
+  - make a table
+  - make a dictionary
+  
+```{r }
+
+download.file(url="https://github.com/mac-theobio/QMEE/blob/master/docs/data/parademo.csv",
+               destfile = "data/parademo.csv")
 
 
 ```
+
 
 
