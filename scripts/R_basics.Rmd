@@ -145,18 +145,20 @@ Date: Jan 26, 2021
 
 
 
-```{r intro to R class 4}
-## 
+```{r class_4}
+QMEEpath <- "~/classes/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+villageTable <- read.csv(file = paste(QMEEpath,"village.csv", sep=''))
 
 print(villageTable
       %>% group_by(vname) ## village name
-      %>% summerize(count= n())
+      %>% summarise(count= n())
       %>% filter(count>1)
       )
 
 print(parasiteTable
       %>%  group_by(id, village, compund)
-      %>% summerize(count=n())
+      %>% summarise(count=n())
       %>% group_by(id)
       %>% summerize(count=n())
       %>% filter(count>1)
@@ -175,8 +177,260 @@ print(parasiteTable
 download.file(url="https://github.com/mac-theobio/QMEE/blob/master/docs/data/parademo.csv",
                destfile = "data/parademo.csv")
 
+```
+
+## Calss 5
+Date: Thursday Jan 28, 2021
+
+```{r jan_28_class}
+QMEEpath <- "~/classes/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+file_name <- "village.csv"
+
+village <- read.csv(file = paste(QMEEpath,file_name, sep=''))
+
+
+apropos("plot") ## find any appropriate plot
+head(mtcars) ## this is a built in data set
+
+library(tidyverse)
+find("filter") ## the order of packages that R is using function filter
+m <- as_tibble(mtcars) ## tibble mostly behave like dataframe, the primary case that makes it different
+print(m)
+# difference between dataframe and tibble, see below
+str(mtcars[,1])
+str(m[,1])
+
+m %>% group_by(cyl) ## group it by single var, ie cylender
+m %>% group_by(cyl) %>% ungroup() ## group it by cylender and ungroup it
+
+m %>% group_by(cyl) %>% summarise(mpg=mean(mpg))
+
+m %>% group_by(cyl,gear)
+m %>% group_by(cyl,gear) %>% summarise(mpg=mean(mpg))
+
+## trick 1, minimum way of putting data into your code
+tax_table <- read.csv(text="
+common_name, taxon
+sunfish, fish
+gar, fish
+racoon, mamel
+                      ")
+## trick 2
+tax_table2 <- read.csv(sep="|", strip.white=TRUE,
+text="
+common_name, taxon
+sunfish, fish
+gar, fish
+racoon, mamel
+                      ")
+
 
 ```
+
+## Calss 5
+Date: Tuesday Feb 2, 2021
+
+Data visualizations, 3 different contexts
+- 1 goal is to explore the data, possibly explore the hypothesis
+- in ggplot there is some thing 
+
+- Basic Graphing
+  - plot() ,...
+  - par(mfrow), layout() for multiple plots on a page
+  - Latice graphics, abstract, creat obg it can be customized
+    xyplot(with type = one or more )
+  - ggplot(data, aes(x=,y=,colour=)) Why is it called aesthetics? aesthetics mapping
+    - geoms
+    - geom_points, geom_lines,...
+    - facets; we could show subset of data on panels facet_wrap(free-form wrapping of subplots) and facet_grid(2D grids of subplots)
+    - more rules of thumb:
+      - flip axes to display labels better (ggplot coord_flip(), or ggstance() package which is not better than ggplot)
+      - facet rows> facet col
+      - order cat variables meaningfully: forcast::fct_reorder(), forcast::fct_infreq() 
+      - hist, bin will effects the shape? there is a trade-off, no good answere. if you have a large data set the density plot is better
+      - 
+
+```{r Feb_2_class}
+
+## coefficient plots, summarising a table
+# Ben has worked on this a lot; dotwhisker::dwplot
+
+# Basic graphics , goal to  data manipulation and draw pics
+# Ben saved it in the repo as class_example.R
+# data, or you can read from the repo directly
+# https://mac-theobio.github.io/QMEE/data/
+
+## PART 1
+library(tidyverse)
+packageVersion("tidyr") ## what is the version of pckage I am using?
+
+## using col_types=cols() suppresses the messages about which type is which
+## homocide data
+QMEEpath <- "~/classes/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+dat <- read_csv(file = paste(QMEEpath,"CA_homicide.csv", sep=''),col_types=cols()) 
+## population size in 2011
+popdat <- read_csv(file = paste(QMEEpath,"CA_popdat.csv", sep=''),col_types=cols())
+# Note that read_csv() in tidyverse has not modified the column names to make them legal R variables names (read.csv() in base R will do that by default: use check.names=FALSE to suppress this)
+#  look at dat, ggplot likes the long format
+head(dat)
+
+# What if we want combine other information?
+# Ali, I think here, since the rows are in a Region order already, we can do the followings otherwise we would need a classification algorithm, right?  
+
+rdat <- tibble(Place=dat$Place,
+      Region=c("all",rep("Atlantic",4), ## setup a region vat that can distinguish between Canada, others
+               rep("East",2),
+               rep("West",4),
+               rep("North",3)))
+head(rdat)
+
+## convert from wide to long
+sdat <- (dat
+    %>% pivot_longer(names_to="year",values_to="homicide",-Place,
+                     names_transform=list(year=as.numeric)) ##we use names_transform to convert the years back to numeric values
+)
+head(sdat)
+
+## add region and pop size info to the homocide data
+sdat2 <- (sdat %>%
+    full_join(rdat,by="Place") %>%
+    full_join(popdat,by="Place")
+)
+## if you don't put by=, full_join will tell you what is common in all 3 dats
+
+## what is fuzzy join?
+
+sdat2 %>%
+    group_by(Place) %>%
+    summarise(homicide=mean(homicide))
+## fancier
+sdat2 %>%
+    group_by(year) %>%
+    summarise(across(homicide,list(mean=mean,sd=sd)))
+
+## One more useful technique is reordering factors (representing categorical variables) in a sensible way. Right now the ‘places’ (provinces, territories, etc.) are ordered alphabetically, R’s default.
+str(sdat2$Place)
+## redorder the place by the population value of 2011
+sdat3 <- (sdat2
+  %>%  mutate(Place=forcats::fct_reorder(Place,Pop_2011)) ## create a factor level, reorder them by pop_2011 (so this is reorder and make them as factor at the same time)
+)
+
+str(sdat3$Place)
+levels(sdat3$Place)
+
+## (use desc(Pop_2011) to arrange in descending order of population):
+(sdat3
+    %>% arrange(desc(Pop_2011))
+    %>% head()
+)
+
+##summarise by combinations of variables:
+## Q: what is .groups="drop"?
+(sdat3 
+%>% group_by(year,Region) 
+%>% summarise(across(homicide,mean),.groups="drop")  
+%>% head()
+  )
+
+##What if I want the mean and standard error? R doesn’t have a built-in “standard error of the mean” function so I define one when I need it:
+sem <- function(x) { sd(x)/sqrt(length(x)) }
+region_avgs <- sdat3 %>% group_by(year,Region) %>%
+    summarise(across(homicide,list(mean=~mean(.,na.rm=TRUE),
+                                    sem=sem)),
+              .groups="drop")
+head(region_avgs)
+
+## Question: why do I have NA values? Ans: only 1 sample is present
+## Drilling down to check some values:
+sdat3 %>% filter(year==2007 & Region=="all")
+
+## Sometimes it’s useful to be able to go from long to wide format. pivot_wider() is the opposite of pivot_longer(): we specify a column in the current data set to spread out into new columns (key) and a column to use as the vales for the table (value)
+(region_avgs
+    %>% select(-homicide_sem)
+    %>% pivot_wider(names_from=Region,values_from=homicide_mean)
+    %>% head()
+)
+
+## save the results
+saveRDS(sdat3,file="./data/CA_homicide.rds")
+
+##Note: For analysis in R, it is generally best to keep your data in long format and pivot_wider() it as necessary (e.g. when creating a human-readable table for output).
+
+#####################################################################################
+##PART 2: Pictures
+#####################################################################################
+## load data
+mdat <- readRDS("./data/CA_homicide.rds")
+
+##One of the advantages of long format is that it allows us to use some of R’s more powerful graphics tools such as the ggplot2 and lattice packages (and it’s what most statistics packages expect):
+library(ggplot2)
+theme_set(theme_bw())  ## black-and-white theme
+## set up basic plot:
+p1 <- ggplot(mdat,aes(year,homicide,colour=Place))
+## ggplot produces an R object which can then be printed (=displayed in a graphics window), or saved (or exported to a graphics file via ggsave()):
+print(p1+geom_line())
+print(p1+geom_line() +geom_point())
+## Might be better on a log scale, with a sensible y-axis label:
+p1L <- (p1
+    + geom_line()
+    + scale_y_log10()
+    + labs(y="Homicides per 100,000 population")
+)
+print(p1L)
+
+##Maybe we don’t care about time at all:
+b1 <- (ggplot(mdat,aes(x=Place,y=homicide,
+                       colour=Region))
+    + geom_boxplot(outlier.colour=NULL)  ## set outlier points to same colour as boxes
+    + scale_y_log10()
+    + labs(y="Homicides per 100,000 population")
+)
+print(b1)
+## The x-axis tick labels overlap enough to be unreadable (unless we resize the plot to be ridiculously long and narrow).
+## We could rotate them 90 degrees to be vertical:
+b1_vertlabels <- b1+theme(axis.text.x=element_text(angle=90))
+print(b1_vertlabels)
+## Note: In general if you want to tweak a ggplot plot, Google it or search the ggplot theme documentation or the ggplot cheat sheet for more information …
+
+## Rotating the whole plot is less familiar, but arguably better. Here I’m also (1) changing the colour palette and (2) changing the order of the Place variable, using %+% to substitute a different set of data into an existing plot:
+mdat_sort <- mdat %>% mutate(across(Place,~forcats::fct_reorder(.,homicide)))
+print(b1
+      %+% mdat_sort  ## substitute sorted data
+      + coord_flip()      ## rotate entire plot
+      + xlab("")          ## x-label redundant
+      + scale_colour_brewer(palette="Dark2") ## change palette
+      )
+
+## Maybe we want to make our line graph less busy:
+print(p1L+facet_wrap(~Region))
+
+## We could also code population size by line width:
+p2 <- (ggplot(mdat,
+             aes(x=year,y=homicide,colour=Region,size=Pop_2011,
+                 group=Place))
+    + geom_line(alpha=0.5)
+    + scale_y_log10()
+    + scale_size_continuous(trans="log10")
+    + labs(y="Homicides per 100,000 population")
+)
+print(p2)
+
+## Using the directlabels package:
+library(directlabels)
+print(p1L
+    + expand_limits(x=2014)  ## add a little more space
+    + geom_dl(aes(label=Place),method="last.bumpup") 
+    + theme(legend.position="none")  ## don't need the legend any more
+)
+
+
+```
+
+
+
+
 
 
 
