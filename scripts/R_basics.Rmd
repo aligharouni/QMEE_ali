@@ -430,6 +430,72 @@ print(p1L
 
 
 
+## Class 6
+Date: Feb 4, 2021
+
+```{r Feb_4_class}
+QMEEpath <- "~/classes/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+## file <- "CA_homicide.csv"
+## temp_dat <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+
+## dealing with emty rows and cols
+library(tidyverse)
+library(janitor) # it says that 
+
+## minimal reproduciable example
+dd <- tibble(x=c(LETTERS[1:5],rep("",3)),
+             y=c(1:5,rep(NA,3)),
+             z=rep(NA,8)
+             )
+
+dd[-(6:7),-3]
+## janitor lib
+remove_empty(dd,c("rows","cols"))
+
+##BMB to be 
+emptyrows2 <- function(x){
+  
+} 
+
+## or change the empty cells with NAs
+dd %>% mutate_if(is.character,
+                 ~replace(., which(!nzchar(.)),NA))
+## ~ mean on fly, . means columns
+
+?mutate_if
+
+## the importance of clean data coding standards
+tmp_table <- read.csv(text="
+common_name_date
+sunfish_2021
+xx_2020
+")
+library(dplyr)
+## letr's separate the column based on "_"
+(tmp_table %>% separate(common_name_date,c("A","B"),sep="([_])")
+          %>% head() #
+)
+
+library(skimr)
+
+library(MASS)
+m <- mvrnorm(50, mu=c(0,0),Sigma = matrix(c(2,1.5,1.5,2),2)) # corelated data set
+plot(m[,1],m[,2])
+
+m <- rbind(m,c(-2,2))
+pairs(mtcars,gap=0) ## take the gaps out
+
+## fancier than pairs
+library(GGally)
+ggpairs(mtcars)
+
+library(car)
+
+
+
+```
+
 
 
 
