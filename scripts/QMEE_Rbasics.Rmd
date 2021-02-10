@@ -146,21 +146,26 @@ Date: Jan 26, 2021
 
 
 ```{r class_4}
+library(tidyverse)
+
 QMEEpath <- "~/classes/QMEE/docs/data/"
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
-villageTable <- read.csv(file = paste(QMEEpath,"village.csv", sep=''))
+file_name <- "village.csv"
+villageTable <- read_csv(file = paste(QMEEpath,file_name, sep=''))
 
 print(villageTable
       %>% group_by(vname) ## village name
-      %>% summarise(count= n())
+      %>% summarize(count= n())
       %>% filter(count>1)
       )
 
+file_name2 <- "parademo.csv"
+parasiteTable <- read_csv(file = paste(QMEEpath,file_name2, sep=''))
 print(parasiteTable
-      %>%  group_by(id, village, compund)
-      %>% summarise(count=n())
+      %>%  group_by(id, village, compound)
+      %>% summarize(count=n())
       %>% group_by(id)
-      %>% summerize(count=n())
+      %>% summarize(count=n())
       %>% filter(count>1)
       %>% arrange(desc(count))
   
@@ -497,6 +502,16 @@ library(car)
 ```
 
 
+## Class 7
+Date: Feb 9, 2021
+
+- stats philosophy
+
+
+
+
+
+```
 
 
 
