@@ -8,8 +8,46 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Class 7
+Date: Feb 9, 2021
 
-## 
+Topic: Stats philosophy
+
+- main readings:
+Please read Nuzzo (2014); Simmons, Nelson, and Simonsohn (2011); Harrell (2017) (references below). They should not be too hard to get through. Think about your own statistical philosophy and be prepared to talk about what statistical inference means to you.
+ - Nuzzo paper 2014;
+    - "UK statistician Ronald Fisher introduced the P value in the 1920s, he did not mean it to be a definitive test. ... The idea was to run an experiment, then see if the results were consistent with what random chance might produce. Researchers would first set up a ‘null hypothesis’ that they wanted to disprove, such as there being no correlation or no difference between two groups. Next, they
+would play the devil’s advocate and, assuming that this null hypothesis was in fact true, calculate the chances of getting results at least as extreme as what was actually observed. This probability was the P value. The smaller it was, suggested Fisher, the greater the likelihood that the straw-man null hypothesis was false. "
+    - "all it [P value] can do is summarize the data assuming a specific null hypothesis. It cannot work backwards and make statements about the underlying reality. That requires another piece of information: the odds that a real effect was there in the first place."
+    - **Ali**: Consider Motyl's study with original P value of 0.01 and say that there was just a 1% chance of his result being a false alarm, ie the probability that the extreme observation has happend randomly is 1%. This is equivalent to say that the probability of replicating his original result was 99%.
+    - “We should be asking, ‘How much of an effect is there?’, not ‘Is there an effect?’”
+    - P-hacking;  psychologist Uri Simonsohn of the University of Pennsylvania, “is trying multiple things until you get the desired result”
+    - researchers should always report effect sizes and confidence intervals. These convey what a P value does not: the magnitude and relative importance of an effect.
+    - Many statisticians also advocate replacing the P value with methods that take advantage
+of Bayes’ rule: an eighteenth-century theorem that describes how to think about probability
+as the plausibility of an outcome, rather than as the potential frequency of that outcome.
+    - Statistician Richard Royall of Johns Hopkins Bloomberg School
+of Public Health in Baltimore, Maryland, said that there are three questions a scientist
+might want to ask after a study: ‘What is the evidence?’ ‘What should I believe?’ and ‘What
+should I do?’ One method cannot answer all these questions, Goodman says: “The numbers
+are where the scientific discussion should start, not end.”
+
+
+## Class 8
+Date: Feb 11, 2021
+
+- expand on the discussion of stats phil; 
+- snooping idea
+
+
+# References 
+
+Nuzzo, Regina. 2014. “Scientific Method: Statistical Errors.” Nature 506 (7487): 150–52. [Nuzzo](https://doi.org/10.1038/506150a).
+
+
+
+
+
 
 
 

@@ -507,6 +507,8 @@ Date: Feb 9, 2021
 
 - stats philosophy
 
+## Class 8
+Date: Feb 11, 2021
 
 
 
