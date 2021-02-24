@@ -1,0 +1,36 @@
+---
+title: "QMEE_permutation"
+author: "Ali"
+date: "23/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## class 9
+Date: Feb 23, 2021
+
+- Permutation approach; no assumption, the weakness is to get confidence interval
+  - the simplest way to hypo test is, if the 2 groups are the same we sample from them equally!
+    - **counting the ant colonies;** 210 permutation
+  
+  - arithmatic mean to geometric is equivalent to go from linear to log transfor; think multiplicatively!
+  - **Pond nutrients;** 
+  - Monte Carlo; 
+  
+  ```{r 23Feb2021}
+
+library("ggplot2"); theme_set(theme_bw())
+library("lmPerm")
+library("coin")
+library("gtools")
+  
+```
+
+  
+
+
+
+
