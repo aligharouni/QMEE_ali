@@ -510,8 +510,52 @@ Date: Feb 9, 2021
 ## Class 8
 Date: Feb 11, 2021
 
+## Class 9 
+```{r Feb_4_class}
+## Permutation
+## dealing with emty rows and cols
+library(tidyverse)
+
+QMEEpath <- "~/classes/mcmaster/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+
+file <- "ants.csv"
+ants <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+ants$place <- factor(ants$place)
+
+# plots
+ggplot(ants,aes(x=place,y=colonies))+geom_boxplot()
+
+set.seed(101)
+res <- numeric(9999) ## vector of zeros
+for (i in 1:9999){
+  ##scramble data
+    ## calc statistics and save it, do that lots of times
+  perm <- sample(nrow(ants))
+  bdat <- transform(ants,colonies=colonies[perm])
+  fieldmean <- mean(bdat[bdat$place=="field","colonies"])
+  forestdmean <- mean(bdat[bdat$place=="forest","colonies"])
+  res[i] <- fieldmean-forestdmean
+}
+hist(res)
+
+truefieldmean <- mean(ants[ants$place=="field","colonies"])
+trueforestdmean <- mean(ants[ants$place=="forest","colonies"])
+obsval <- truefieldmean-trueforestdmean
 
 
+## t test
+tt <- t.test(colonies~place,data=ants,var.equal=TRUE)
+tt$statistic
+
+library(lmPerm)
+summary(lm(colonies~place,data=ants))
+
+## if I use lmPerm
+m1 <- lmp(colonies~place,data=ants)
+summary(m1)
+## note the p-val is different since it is not relying on the distribution
+## 
 
 ```
 
