@@ -29,7 +29,11 @@ library("gtools")
   
 ```
 
-  
+## class 10
+Date: Feb 25, 2021
+
+permutation approach: A basically doing null-hyp testing in frequentists setup
+you can do usually t-test or ANOVA instead of permutation test. But the permutation test is more general with less assumptions, more flexible, as long as you can think about scrambling the data based on treating the groups the same.
 
 
 

@@ -512,6 +512,12 @@ Date: Feb 11, 2021
 
 ## Class 9 
 ```{r Feb_4_class}
+
+library("ggplot2"); theme_set(theme_bw())
+library("lmPerm")
+library("coin")
+library("gtools")
+
 ## Permutation
 ## dealing with emty rows and cols
 library(tidyverse)
@@ -523,8 +529,13 @@ file <- "ants.csv"
 ants <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
 ants$place <- factor(ants$place)
 
-# plots
-ggplot(ants,aes(x=place,y=colonies))+geom_boxplot()
+## plots
+ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + geom_point() 
+## issue: boxplots don't make sense when you have a small data sets because they show you only 5 numbers (and outliers if they exist), so if you have only 4 data points. geom_point() is not very usefull since the points may overlap. I can jitter them but it may not look good
+ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + geom_jitter()
+## the trick is to use stat_sum, it looks whether there are multiple points at the same place: 
+ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + stat_sum()
+## see the notes
 
 set.seed(101)
 res <- numeric(9999) ## vector of zeros
@@ -532,7 +543,9 @@ for (i in 1:9999){
   ##scramble data
     ## calc statistics and save it, do that lots of times
   perm <- sample(nrow(ants))
-  bdat <- transform(ants,colonies=colonies[perm])
+  bdat <- transform(ants,colonies=colonies[perm]) ## transform is like mutate for base R
+  ## the diff between the fields mean and forest's mean
+  ## compute & store difference in means; store the value
   fieldmean <- mean(bdat[bdat$place=="field","colonies"])
   forestdmean <- mean(bdat[bdat$place=="forest","colonies"])
   res[i] <- fieldmean-forestdmean
@@ -559,5 +572,10 @@ summary(m1)
 
 ```
 
+## Class 10
+
+```{r Feb_25_class}
+
+```
 
 
