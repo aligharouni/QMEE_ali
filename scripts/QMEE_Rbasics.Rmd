@@ -578,4 +578,69 @@ summary(m1)
 
 ```
 
+## Class 11
+
+- general l model and generalized l model are different things,
+- Basic linear model
+
+This paper was suggested 
+Karelus, Dana L, J Walter McCown, Brian K Scheick, Madelon van de Kerk, Benjamin M Bolker, and Madan K Oli. “Effects of Environmental Factors and Landscape Features on Movement Patterns of Florida Black Bears.” Journal of Mammalogy 98, no. 5 (October 3, 2017): 1463–78. https://doi.org/10.1093/jmammal/gyx066.
+
+- Diagnostic of Linear Model;
+  - dependancy assumption is very hard to check
+  - many of the problems can be resolved by transformation of the data;
+    - 
+  - Box-Cox is always used on y, response var
+  
+
+```{r Mar_2_class}
+library(tidyverse)
+QMEEpath <- "~/classes/mcmaster/QMEE/docs/data/"
+list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+
+file <- "skewdat.csv"
+skewdata <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+
+m1 <- lm(skew~Size, data=skewdata)
+par(mfrow=c(2,2),mar=c(2,3,1.5,1),mgp=c(2,1,0))
+plot(m1,id.n=4)
+
+
+library(dplyr)
+
+library(ggplot2); theme_set(theme_bw())
+aa <- broom::augment(m1) %>% mutate(n=1:n())
+(ggplot(skewdata, aes(Size,skew))
+    + geom_point(aes(colour=abs(aa$.resid)>0.1))
+    + geom_smooth(method="lm")
+    + scale_colour_manual(values=c("black","red"))
+)
+
+## 
+file2 <- "lizards.csv"
+# lizards <- read_csv(file = paste(QMEEpath,file2, sep=''),col_types=cols())
+lizards <- read.csv(file = paste(QMEEpath,file2, sep=''), stringsAsFactors=TRUE)
+
+lizards$time <- factor(lizards$time,levels=c("early","midday","late"))
+lmint <- lm(grahami~light*time, data=lizards)
+lmboth <- lm(grahami~light + time, data=lizards)
+lmlight <- lm(grahami~light, data=lizards)
+lmtime <- lm(grahami~time, data=lizards)
+
+anova(lmboth, lmlight, test="F")
+
+anova(lmboth, lmtime, test="F")
+
+drop1(lmboth, test="F")
+
+car::Anova(lmboth)
+
+print(summary(lmint))
+
+
+```
+
+
+
+
 
