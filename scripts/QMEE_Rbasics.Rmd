@@ -6,8 +6,15 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(dev.args = list(png = list(type = "cairo")))
 ```
+
+```{r QMEE_class}
+## relative path to QMEE data, needs to be set globally
+QMEEpath <- "../../QMEE/docs/data/"
+
+```
+
 
 ## Calss 1 
 - R basics
@@ -148,7 +155,6 @@ Date: Jan 26, 2021
 ```{r class_4}
 library(tidyverse)
 
-QMEEpath <- "~/classes/QMEE/docs/data/"
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 file_name <- "village.csv"
 villageTable <- read_csv(file = paste(QMEEpath,file_name, sep=''))
@@ -188,7 +194,7 @@ download.file(url="https://github.com/mac-theobio/QMEE/blob/master/docs/data/par
 Date: Thursday Jan 28, 2021
 
 ```{r jan_28_class}
-QMEEpath <- "~/classes/QMEE/docs/data/"
+print(QMEEpath) 
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 file_name <- "village.csv"
 
@@ -272,7 +278,7 @@ packageVersion("tidyr") ## what is the version of pckage I am using?
 
 ## using col_types=cols() suppresses the messages about which type is which
 ## homocide data
-QMEEpath <- "~/classes/QMEE/docs/data/"
+print(QMEEpath) 
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 dat <- read_csv(file = paste(QMEEpath,"CA_homicide.csv", sep=''),col_types=cols()) 
 ## population size in 2011
@@ -434,19 +440,18 @@ print(p1L
 ```
 
 
-
 ## Class 6
 Date: Feb 4, 2021
 
 ```{r Feb_4_class}
-QMEEpath <- "~/classes/QMEE/docs/data/"
+print(QMEEpath) 
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 ## file <- "CA_homicide.csv"
-## temp_dat <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+## temp_dat <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols())
 
 ## dealing with emty rows and cols
 library(tidyverse)
-library(janitor) # it says that 
+library(janitor) # it says that
 
 ## minimal reproduciable example
 dd <- tibble(x=c(LETTERS[1:5],rep("",3)),
@@ -458,10 +463,10 @@ dd[-(6:7),-3]
 ## janitor lib
 remove_empty(dd,c("rows","cols"))
 
-##BMB to be 
+##BMB to be
 emptyrows2 <- function(x){
-  
-} 
+
+}
 
 ## or change the empty cells with NAs
 dd %>% mutate_if(is.character,
@@ -497,8 +502,6 @@ ggpairs(mtcars)
 
 library(car)
 
-
-
 ```
 
 
@@ -510,30 +513,43 @@ Date: Feb 9, 2021
 ## Class 8
 Date: Feb 11, 2021
 
-## Class 9 
-```{r Feb_4_class}
+## Class 9
+Date: Feb 23, 2021
 
+- Permutation approach; no assumption, the weakness is to get confidence interval
+  - the simplest way to hypo test is, if the 2 groups are the same we sample from them equally!
+    - **counting the ant colonies;** 210 permutation
+
+  - arithmatic mean to geometric is equivalent to go from linear to log transfor; think multiplicatively!
+  - **Pond nutrients;**
+  - Monte Carlo;
+
+
+
+```{r Feb_23_class}
+ 
 library("ggplot2"); theme_set(theme_bw())
 library("lmPerm")
 library("coin")
 library("gtools")
 
+
 ## Permutation
 ## dealing with emty rows and cols
 library(tidyverse)
 
-QMEEpath <- "~/classes/mcmaster/QMEE/docs/data/"
+print(QMEEpath)
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 
 file <- "ants.csv"
-ants <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+ants <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols())
 ants$place <- factor(ants$place)
 
 ## plots
-ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + geom_point() 
+ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + geom_point()
 ## issue: boxplots don't make sense when you have a small data sets because they show you only 5 numbers (and outliers if they exist), so if you have only 4 data points. geom_point() is not very usefull since the points may overlap. I can jitter them but it may not look good
 ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + geom_jitter()
-## the trick is to use stat_sum, it looks whether there are multiple points at the same place: 
+## the trick is to use stat_sum, it looks whether there are multiple points at the same place:
 ggplot(ants,aes(x=place,y=colonies))+geom_boxplot() + stat_sum()
 ## see the notes
 
@@ -556,7 +572,6 @@ truefieldmean <- mean(ants[ants$place=="field","colonies"])
 trueforestdmean <- mean(ants[ants$place=="forest","colonies"])
 obsval <- truefieldmean-trueforestdmean
 
-
 ## t test
 tt <- t.test(colonies~place,data=ants,var.equal=TRUE)
 tt$statistic
@@ -568,38 +583,38 @@ summary(lm(colonies~place,data=ants))
 m1 <- lmp(colonies~place,data=ants)
 summary(m1)
 ## note the p-val is different since it is not relying on the distribution
-## 
 
 ```
 
 ## Class 10
+Date: Feb 25, 2021
 
-```{r Feb_25_class}
+permutation approach: A basically doing null-hyp testing in frequentists setup
+you can do usually t-test or ANOVA instead of permutation test. But the permutation test is more general with less assumptions, more flexible, as long as you can think about scrambling the data based on treating the groups the same.
 
-```
 
 ## Class 11
 
 - general l model and generalized l model are different things,
 - Basic linear model
 
-This paper was suggested 
-Karelus, Dana L, J Walter McCown, Brian K Scheick, Madelon van de Kerk, Benjamin M Bolker, and Madan K Oli. “Effects of Environmental Factors and Landscape Features on Movement Patterns of Florida Black Bears.” Journal of Mammalogy 98, no. 5 (October 3, 2017): 1463–78. https://doi.org/10.1093/jmammal/gyx066.
+This paper was suggested
+Karelus, Dana L, J Walter McCown, Brian K Scheick, Madelon van de Kerk, Benjamin M Bolker, and Madan K Oli. “Effects of Environmental Factors and Landscape Features on Movement Patterns of Florida Black Bears.” Journal of Mammalogy 98, no. 5 (October 3, 2017): 1463–78. [doi](https://doi.org/10.1093/jmammal/gyx066).
 
 - Diagnostic of Linear Model;
   - dependancy assumption is very hard to check
   - many of the problems can be resolved by transformation of the data;
-    - 
+    -
   - Box-Cox is always used on y, response var
-  
+
 
 ```{r Mar_2_class}
 library(tidyverse)
-QMEEpath <- "~/classes/mcmaster/QMEE/docs/data/"
+print(QMEEpath)
 list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
 
 file <- "skewdat.csv"
-skewdata <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols()) 
+skewdata <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols())
 
 m1 <- lm(skew~Size, data=skewdata)
 par(mfrow=c(2,2),mar=c(2,3,1.5,1),mgp=c(2,1,0))
@@ -616,7 +631,7 @@ aa <- broom::augment(m1) %>% mutate(n=1:n())
     + scale_colour_manual(values=c("black","red"))
 )
 
-## 
+##
 file2 <- "lizards.csv"
 # lizards <- read_csv(file = paste(QMEEpath,file2, sep=''),col_types=cols())
 lizards <- read.csv(file = paste(QMEEpath,file2, sep=''), stringsAsFactors=TRUE)
@@ -636,7 +651,6 @@ drop1(lmboth, test="F")
 car::Anova(lmboth)
 
 print(summary(lmint))
-
 
 ```
 
