@@ -594,6 +594,7 @@ you can do usually t-test or ANOVA instead of permutation test. But the permutat
 
 
 ## Class 11
+Date: March 2
 
 - general l model and generalized l model are different things,
 - Basic linear model
@@ -654,6 +655,53 @@ print(summary(lmint))
 
 ```
 
+## Class 12
+
+Date: Mar 4 2021
+
+```{r march_4_class}
+
+forest <- c(9, 6, 4, 6, 7, 10)
+field  <- c(12, 9, 12, 10)
+ants <- data.frame(
+  place=rep(c("field","forest"),
+            c(length(field), length(forest))),
+  colonies=c(field,forest)
+)
+## utility function for pretty printing
+pr <- function(m) printCoefmat(coef(summary(m)),
+                        digits=3,signif.stars=FALSE)
+
+pr(lm1 <- lm(colonies~place,data=ants))
+
+predict(lm1,newdata=data.frame(place=c("field","forest")),
+        interval="confidence")
+
+library("effects")
+summary(allEffects(lm1))
+
+library("emmeans")
+emmeans(lm1,specs=~place)
+
+
+plot(allEffects(lm1))
+
+library("dotwhisker")
+dwplot(lm0)
+
+
+
+```
+## Class 13
+
+Date: Mar 9, 2021
+Topic Generalized linear model, a great presentation by Ben Bolker.
+
+## Class 14
+
+Date: Mar 11, 2021
+
+JD talked about the odds example.
 
 
 
