@@ -687,22 +687,53 @@ emmeans(lm1,specs=~place)
 plot(allEffects(lm1))
 
 library("dotwhisker")
-dwplot(lm0)
+dwplot(lm1)
 
 
 
 ```
 ## Class 13
-
 Date: Mar 9, 2021
 Topic Generalized linear model, a great presentation by Ben Bolker.
 
 ## Class 14
-
 Date: Mar 11, 2021
 
 JD talked about the odds example.
 
+## Class 15
+Date: Tuesday, Mar 16, 2021
+Topic: Mixed model
+
+- the essential parameters we estimate are not the effect of each level, but the mean and variance of the distribution of the effects.
+- don't keep secrets from your model.
+
+### part 2, Ben examples
+
+y~x
+```{r Mar_16_class}
+library(tidyverse)
+library(lme4)
+
+head(sleepstudy)
+library(ggplot2)
+
+ggplot(sleepstudy,aes(Days,Reaction,colour=Subject))+
+  geom_point() +
+  geom_line()
+  geom_smooth(method = "lm")
+
+ggplot(sleepstudy,aes(Days,Reaction))+
+  geom_point() +
+  geom_line(aes(group=Subject))
+  
+# print(QMEEpath)
+# list.files(path=QMEEpath, pattern="*.csv") # create list of all .csv files in folder
+
+# file <- "skewdat.csv"
+# skewdata <- read_csv(file = paste(QMEEpath,file, sep=''),col_types=cols())
+
+```
 
 
 
