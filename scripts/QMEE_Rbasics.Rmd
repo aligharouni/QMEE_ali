@@ -735,5 +735,81 @@ ggplot(sleepstudy,aes(Days,Reaction))+
 
 ```
 
+## Class 16
+Date: Thursday, Mar 18, 2021
+Topic: Mixed model
+
+Read this chapter from Fox et al. that Ben wrote:
+https://ms.mcmaster.ca/~bolker/misc/private/14-Fox-Chap13.pdf
+id and pass: foxchap
+
+Q by JD: Note that the real question is: should this predictor have a fixed or random effect?
+Ben: see this section Avoiding mixed model 13.5.1
+
+## Class 17
+Date: Tuesday, Mar 23, 2021
+Topic: Bayesian Stats;
+
+- Bayes theorem
+- Bayesian inference; prior dist of all parameters, and how much you trust them, then you can get conf interval (credible interval), ... 
+- How to build conf interval, many way to do this; quantiles approach JD liked it, highest posterior density, distance based method
+- Advantages; explicit what you are assuming, 
+- Difficulties/disadvantages; 
+- prior dist; 
+- conjugate prior;
+- MCMC; 
+
+Ben's live coding
+
+```{r Mar_23_class}
+library("lattice") ## built-in
+## model-fitting
+##install.packages(c("rjags","R2jags")) 
+library("R2jags")
+library("rstanarm")
+library("arm")        ## for coefplot, bayesglm
+## handling fitted models (diagnostics & inference)
+library("coda")
+library("emdbook")    ## for lump.mcmc.list() and as.mcmc.bugs()
+library("dotwhisker")
+library("broom.mixed")
+library("ggplot2"); theme_set(theme_bw())
+namedList <- lme4:::namedList  ## utility
+
+
+## generate fake data;
+set.seed(411)
+N <- 40
+## predictor variables
+a <- runif(N)
+b <- runif(N)
+c <- runif(N)
+y <- rnorm(N,mean=2+1*a+4*b+1*c,sd=1)
+dat <- data.frame(y,a,b,c)
+print(summary(dat))
+## frequentists linear model
+summary(lm(y~a+b+c,data=dat))
+
+jags1 <- jags(model.file='./bayes.bug',
+              parameters=c("ma","mb","mc","int"),
+              data = namedList(a, b, c, N, y),
+              n.chains = 4,
+              inits=NULL)
+
+bb <- jags1$BUGSoutput  ## extract the "BUGS output" component
+mm <- as.mcmc.bugs(bb)  ## convert it to an "mcmc" object that coda can handle
+plot(jags1)             ## large-format graph
+## plot(mm)                ## trace + density plots, same as above
+xyplot(mm,layout=c(2,3))  ## prettier trace plot
+densityplot(mm,layout=c(2,3)) ## prettier density plot
+print(dwplot(jags1))              ## estimate + credible interval plot
+```
+
+
+
+
+
+
+
 
 
