@@ -806,7 +806,9 @@ print(dwplot(jags1))              ## estimate + credible interval plot
 ```
 
 
-
+## Class 18
+Date: Thursday, Mar 25, 2021
+Topic: More Bayesian Stats;
 
 
 
