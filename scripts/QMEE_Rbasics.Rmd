@@ -810,6 +810,62 @@ print(dwplot(jags1))              ## estimate + credible interval plot
 Date: Thursday, Mar 25, 2021
 Topic: More Bayesian Stats;
 
+## Class 19
+Date: Tuesday, Mar 30, 2021
+Topic: project;
+
+vignette("DHARMa")
+
+AIC correction AIC model + 2*sum(log(bs$Freq))
+
+## Class 20
+Date: Thursday, Apr 1, 2021
+Topic: QA and projects;
+
+AIC; 
+https://stats.stackexchange.com/questions/48714/prerequisites-for-aic-model-comparison/100671#100671
+
+https://stats.stackexchange.com/questions/61332/comparing-aic-of-a-model-and-its-log-transformed-version
+
+Also check : "Jacobian AIC"
+
+lm(log(y) ~ ...)
+AIC(model) + 2*sum(log(y))
+
+AIC = -2 * (log likelihood) + 2 (number of parameters)
+
+## Class 21
+Date: Tuesday, Apr 6, 2021
+Topic: ;
+
+## Class 23
+Date: Tuesday, Apr 13, 2021
+Topic: presentations;
+
+1- Mercury (THg) in fish in St John river
+Jenni Velichka et al,
+- Dam and fish size increases Merc cons.
+- PCA in fish parameters to get the correlation
+
+2- Seasonal trend in vocalizing bearded seals in the Western Canadian Arctic
+Sreedvevi Kesavan, Annika
+- Q: 
+
+3- URT Microbiom Data
+Elizabeth, Emily
+
+4- Bedbug
+Tovah Kashetsky et al
+- 
+
+5- Periphyton analysis
+Megan Ridgway, Dan
+Why not stepwise regression?
+https://www.stata.com/support/faqs/statistics/stepwise-regression-problems/
+
+
+
+
 
 
 
